@@ -11,26 +11,7 @@
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd">
-	<apikit:config name="sample-config"
-		api="resource::0fbbef6c-5809-44e9-b36e-07c7fc08126d:sample:1.0.0:raml:zip:sample.raml"
-		outboundHeadersMapName="outboundHeaders"
-		httpStatusVarName="httpStatus" />
-	<api-gateway:autodiscovery apiId="17319347"
-		ignoreBasePath="false" doc:name="API Autodiscovery"
-		doc:id="0708732a-e246-4a7d-b3a4-17139759b46c" flowRef="sample-main" />
-	<http:listener-config name="HTTP_Listener_config"
-		doc:name="HTTP Listener config"
-		doc:id="6cc4d9db-1005-4617-8f03-310c01be24f1">
-		<http:listener-connection host="0.0.0.0"
-			port="8081" />
-	</http:listener-config>
-	<twilio:config name="Twilio_Connector_Config"
-		doc:name="Twilio Connector Config"
-		doc:id="9b78fb0c-d596-4db0-8fbb-f8367baaced0">
-		<twilio:account-sid-auth-token-connection
-			username="ACb40ecfb1449447ad4ed3ae9a55cbaeb0"
-			password="88361a6a430fa7e78a4959d487729c1b" />
-	</twilio:config>
+	
 	<flow name="sample-main">
 		<http:listener config-ref="HTTP_Listener_config"
 			path="/*">
@@ -45,138 +26,8 @@ http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/t
 			</http:error-response>
 		</http:listener>
 		<apikit:router config-ref="sample-config" />
-		<error-handler>
-			<on-error-propagate type="APIKIT:BAD_REQUEST">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Bad request"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">400
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
-			<on-error-propagate type="APIKIT:NOT_FOUND">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">404
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
-			<on-error-propagate
-				type="APIKIT:METHOD_NOT_ALLOWED">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Method not allowed"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">405
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
-			<on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Not acceptable"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">406
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
-			<on-error-propagate
-				type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Unsupported media type"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">415
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
-			<on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Not Implemented"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">501
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
-		</error-handler>
-	</flow>
-	<flow name="sample-console">
-		<http:listener config-ref="HTTP_Listener_config"
-			path="/console/*">
-			<http:response
-				statusCode="#[vars.httpStatus default 200]">
-				<http:headers>#[vars.outboundHeaders default {}]</http:headers>
-			</http:response>
-			<http:error-response
-				statusCode="#[vars.httpStatus default 500]">
-				<http:body>#[payload]</http:body>
-				<http:headers>#[vars.outboundHeaders default {}]</http:headers>
-			</http:error-response>
-		</http:listener>
-		<apikit:console config-ref="sample-config" />
-		<error-handler>
-			<on-error-propagate type="APIKIT:NOT_FOUND">
-				<ee:transform
-					xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
-					</ee:message>
-					<ee:variables>
-						<ee:set-variable variableName="httpStatus">404
-						</ee:set-variable>
-					</ee:variables>
-				</ee:transform>
-			</on-error-propagate>
+		<error-handler ref="generic-global-error-handler">
+			
 		</error-handler>
 	</flow>
 	<flow name="get:\helloworld:sample-config">
@@ -203,8 +54,7 @@ output application/x-www-form-urlencoded
 			<twilio:create20100401-accounts-messagesjson-by-account-sid
 				doc:name="Copy_of_Create Message"
 				doc:id="f9c050f2-970b-4d65-988c-731f818542f4"
-				config-ref="Twilio_Connector_Config"
-				accountSid="ACb40ecfb1449447ad4ed3ae9a55cbaeb0" />
+				accountSid="#[Mule::p('secure::twilio.accountSid')]" config-ref="Twilio_Connector_Config"/>
 			<logger level="INFO" doc:name="Copy_of_Logger"
 				doc:id="5f129c7a-969b-4688-b4f9-dc98b7bffbef"
 				message='#["SMS successfully sent"]' />
