@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	
+	http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="d8d63ba4-d56f-4225-8191-125055807b93"
+		file="properties/${mule.env}.yaml" />
+	<twilio:config name="Twilio_Connector_Config"
+		doc:name="Twilio Connector Config"
+		doc:id="a1381284-880b-49b8-888b-31d599ceb619">
+		<twilio:account-sid-auth-token-connection
+			username="${secure::twilio.userName}"
+			password="${secure::twilio.password}" />
+	</twilio:config>
+	<global-property doc:name="Global Property"
+		doc:id="1c35a769-7e36-4e50-90ee-c0b9772b11b7" name="mule.env"
+		value="DEV" />
+	<secure-properties:config
+		name="Secure_Properties_Config" doc:name="Secure Properties Config"
+		doc:id="3dd59d30-e1c4-4449-95dd-c9e4d517faf1"
+		file="secureProperties\secure-properties.yaml" key="${mule.key}" />
+	<global-property doc:name="Global Property"
+		doc:id="0b8838db-41b0-4d99-8fa2-732e7fb44732" name="mule.key"
+		value="1234567812345678" />
+	<apikit:config name="sample-config"
+		api="resource::0fbbef6c-5809-44e9-b36e-07c7fc08126d:sample:1.0.0:raml:zip:sample.raml"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+	<api-gateway:autodiscovery apiId="17319347"
+		ignoreBasePath="false" doc:name="API Autodiscovery"
+		doc:id="f56b7d63-e4d4-47c3-ab07-81a68da299c6" flowRef="sample-main" />
+	<http:listener-config name="HTTP_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="e0273a4e-89a5-47af-8787-25ba331a6949">
+		<http:listener-connection host="0.0.0.0"
+			port="${http.port}" />
+	</http:listener-config>
+
+</mule>
