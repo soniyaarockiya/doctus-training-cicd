@@ -37,6 +37,7 @@
 						<applicationName>doctus-cicd</applicationName>
 						<environment>${environment}</environment>
 						<workerType>${workerType}</workerType>
+						<workers>${workers}</workers>
 					</cloudHubDeployment>
 				</configuration>
 			</plugin>
