@@ -152,6 +152,11 @@
 	</dependencies>
 
 	<repositories>
+	<repository>
+			<id>0fbbef6c-5809-44e9-b36e-07c7fc08126d</id>
+			<url>https://maven.anypoint.mulesoft.com/api/v2/organizations/0fbbef6c-5809-44e9-b36e-07c7fc08126d/maven</url>
+			<layout>default</layout>
+		</repository>
 		<repository>
 			<id>anypoint-exchange-v2</id>
 			<name>Anypoint Exchange</name>
