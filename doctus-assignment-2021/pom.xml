@@ -153,7 +153,7 @@
 
 	<repositories>
 	<repository>
-			<id>0fbbef6c-5809-44e9-b36e-07c7fc08126d</id>
+			<id>doctus</id>
 			<url>https://maven.anypoint.mulesoft.com/api/v2/organizations/0fbbef6c-5809-44e9-b36e-07c7fc08126d/maven</url>
 			<layout>default</layout>
 		</repository>
