@@ -105,7 +105,7 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>0fbbef6c-5809-44e9-b36e-07c7fc08126d</groupId>
+			<groupId>doctus</groupId>
 			<artifactId>sample</artifactId>
 			<version>1.0.0</version>
 			<classifier>raml</classifier>
